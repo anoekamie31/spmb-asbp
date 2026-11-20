@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="emerald">
+<html lang="id">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,61 +8,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ---------- VARIABEL TEMA BERBASIS LOGO ASBP ---------- */
-    :root, [data-theme="emerald"] {
-      --primary: #005A4F;
+    /* ---------- PALET WARNA DARI LOGO ASBP ---------- */
+    :root {
+      --primary: #005A4F;        /* Hijau Zamrud Logo */
       --primary-dark: #00423A;
-      --primary-soft: #E6F2F0;
-      --accent-gold: #D97706;
-      --accent-gold-soft: #FEF3C7;
-      --sidebar-bg: #08332E;
+      --primary-soft: #E8F3F1;
+      --gold: #D97706;           /* Aksen Emas Logo */
+      --gold-light: #FBBF24;
+      --gold-soft: #FEF3C7;
+      --sidebar-bg: #08332E;     /* Hijau Gelap Sidebar */
       --sidebar-dark: #052420;
       --sidebar-hover: #0F4740;
-      --sidebar-text: #B8D4D0;
-      --sidebar-border: rgba(255, 255, 255, 0.09);
-      --bg: #F3F6F6;
+      --sidebar-text: #C2DBD7;
+      --bg: #F4F7F6;
       --surface: #FFFFFF;
-      --border: #DCE4E3;
+      --border: #DCE4E2;
       --text: #0F172A;
       --muted: #5A6B69;
-      --sidebar-w: 235px;
+      --sidebar-w: 240px;
       --radius: 10px;
-    }
-
-    [data-theme="daylight"] {
-      --primary: #005A4F;
-      --primary-dark: #00423A;
-      --primary-soft: #E6F2F0;
-      --accent-gold: #D97706;
-      --accent-gold-soft: #FEF3C7;
-      --sidebar-bg: #FFFFFF;
-      --sidebar-dark: #F8FAFC;
-      --sidebar-hover: #F1F5F9;
-      --sidebar-text: #475569;
-      --sidebar-border: #E2E8F0;
-      --bg: #F8FAFC;
-      --surface: #FFFFFF;
-      --border: #E2E8F0;
-      --text: #0F172A;
-      --muted: #64748B;
-    }
-
-    [data-theme="ivory"] {
-      --primary: #064E3B;
-      --primary-dark: #022C22;
-      --primary-soft: #ECFDF5;
-      --accent-gold: #B45309;
-      --accent-gold-soft: #FEF3C7;
-      --sidebar-bg: #1C2522;
-      --sidebar-dark: #141B18;
-      --sidebar-hover: #293631;
-      --sidebar-text: #C7D2CE;
-      --sidebar-border: rgba(255, 255, 255, 0.08);
-      --bg: #FAF8F5;
-      --surface: #FFFFFF;
-      --border: #E7E2D8;
-      --text: #1C1917;
-      --muted: #686259;
     }
 
     * { box-sizing: border-box; }
@@ -73,7 +37,6 @@
       color: var(--text);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      transition: background .2s ease, color .2s ease;
     }
     h1, h2, h3, .brand-title, .kpi-val {
       font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
@@ -83,18 +46,22 @@
     /* ---------- LOGIN OVERLAY ---------- */
     .login-overlay {
       position: fixed; inset: 0; z-index: 3000; display: none; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, #005A4F 0%, #052420 100%); padding: 16px;
+      background: radial-gradient(circle at top right, #005A4F 0%, #052420 100%); padding: 16px;
     }
     .login-box {
       background: #fff; width: 100%; max-width: 390px; border-radius: 14px; padding: 32px 28px;
-      box-shadow: 0 24px 48px rgba(0,0,0,.32); border-top: 5px solid var(--accent-gold);
+      box-shadow: 0 24px 48px rgba(0,0,0,.35); border-top: 5px solid var(--gold);
     }
     .login-logo-wrap {
-      width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 50%;
-      background: #fff; padding: 4px; box-shadow: 0 4px 14px rgba(0,90,79,.15);
-      border: 2px solid var(--primary-soft); display: flex; align-items: center; justify-content: center;
+      width: 92px; height: 92px; margin: 0 auto 14px; border-radius: 50%;
+      background: #ffffff; padding: 4px;
+      box-shadow: 0 6px 18px rgba(0,90,79,.18);
+      border: 2.5px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
     }
-    .login-logo-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+    .login-logo-wrap img {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+    }
     .login-box h2 { margin: 0 0 4px; font-size: 20px; color: var(--primary); text-align: center; font-weight: 800; }
     .login-box p { margin: 0 0 20px; font-size: 13px; color: var(--muted); text-align: center; }
     .login-box input {
@@ -118,38 +85,35 @@
     .wrapper { display: flex; min-height: 100vh; flex-direction: column; }
 
     .main-header {
-      position: fixed; top: 0; left: 0; right: 0; height: 58px; z-index: 1030;
+      position: fixed; top: 0; left: 0; right: 0; height: 62px; z-index: 1030;
       display: flex; align-items: center; background: var(--surface); color: var(--text);
       border-bottom: 1px solid var(--border);
     }
     .brand-logo {
-      width: var(--sidebar-w); height: 58px; background: var(--sidebar-dark);
-      display: flex; align-items: center; gap: 11px;
+      width: var(--sidebar-w); height: 62px; background: var(--sidebar-dark);
+      display: flex; align-items: center; gap: 12px;
       padding: 0 16px; text-decoration: none; flex-shrink: 0;
-      border-right: 1px solid var(--sidebar-border);
-      border-bottom: 1px solid var(--sidebar-border);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .brand-emblem {
-      width: 40px; height: 40px; border-radius: 50%; background: #ffffff;
+      width: 44px; height: 44px; border-radius: 50%; background: #ffffff;
       padding: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,.2); border: 1.5px solid var(--accent-gold);
+      box-shadow: 0 2px 8px rgba(0,0,0,.3); border: 2px solid var(--gold);
     }
     .brand-emblem img {
       width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
     }
     .brand-text-wrap { display: flex; flex-direction: column; min-width: 0; }
     .brand-title {
-      font-size: 15px; font-weight: 800; color: #ffffff; letter-spacing: .3px; line-height: 1.15;
+      font-size: 15.5px; font-weight: 800; color: #ffffff; letter-spacing: .3px; line-height: 1.15;
     }
-    [data-theme="daylight"] .brand-title { color: var(--primary); }
     .brand-sub {
-      font-size: 10.5px; font-weight: 600; color: #FBBF24; letter-spacing: .4px; margin-top: 2px;
+      font-size: 11px; font-weight: 700; color: var(--gold-light); letter-spacing: .4px; margin-top: 2px;
     }
-    [data-theme="daylight"] .brand-sub { color: var(--accent-gold); }
 
     .navbar-custom {
       flex: 1; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 18px; height: 58px;
+      padding: 0 18px; height: 62px;
     }
     .nav-left { display: flex; align-items: center; gap: 12px; }
     .sidebar-toggle {
@@ -157,8 +121,8 @@
       cursor: pointer; padding: 6px 10px; border-radius: 7px; line-height: 1;
     }
     .sidebar-toggle:hover { border-color: var(--primary); color: var(--primary); }
-    .school-title-nav { font-size: 13px; font-weight: 500; color: var(--muted); }
-    .school-title-nav b { color: var(--text); font-weight: 700; }
+    .school-title-nav { font-size: 13.5px; font-weight: 500; color: var(--muted); }
+    .school-title-nav b { color: var(--primary); font-weight: 700; }
 
     .navbar-right { display: flex; align-items: center; gap: 8px; }
     .nav-pill {
@@ -173,38 +137,31 @@
     .nav-pill.logout { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
     .nav-pill.logout:hover { background: #fee2e2; }
 
-    .theme-select {
-      padding: 6px 10px; border-radius: 7px; font-size: 12px; font-weight: 600;
-      border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer;
-    }
-
     /* ---------- SIDEBAR ---------- */
     .main-sidebar {
-      position: fixed; top: 58px; bottom: 0; left: 0; width: var(--sidebar-w);
+      position: fixed; top: 62px; bottom: 0; left: 0; width: var(--sidebar-w);
       background: var(--sidebar-bg); color: var(--sidebar-text);
-      overflow-y: auto; z-index: 1020; transition: transform .25s ease, background .2s ease;
-      border-right: 1px solid var(--sidebar-border);
+      overflow-y: auto; z-index: 1020; transition: transform .25s ease;
     }
     .user-panel {
       display: flex; align-items: center; gap: 11px; padding: 14px 16px;
-      border-bottom: 1px solid var(--sidebar-border);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .user-avatar {
       width: 36px; height: 36px; border-radius: 9px;
-      background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, #0D9488 100%);
       color: #fff; font-weight: 800; font-size: 13px;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      border: 1px solid rgba(255,255,255,.2);
+      border: 1.5px solid rgba(251, 191, 36, 0.45);
     }
     .user-info .u-name { color: #fff; font-weight: 700; font-size: 13px; line-height: 1.25; }
-    [data-theme="daylight"] .user-info .u-name { color: var(--text); }
-    .user-info .u-status { font-size: 11px; color: var(--sidebar-text); opacity: .85; margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+    .user-info .u-status { font-size: 11px; color: #99BDB8; margin-top: 2px; display: flex; align-items: center; gap: 5px; }
     .dot-online { width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block; }
 
     .sidebar-menu { list-style: none; margin: 0; padding: 8px 0 20px; }
     .sidebar-header {
       padding: 12px 16px 5px; font-size: 10px; font-weight: 700; letter-spacing: .8px;
-      color: var(--sidebar-text); opacity: .6; text-transform: uppercase;
+      color: #7FA6A0; text-transform: uppercase;
     }
     .sidebar-menu li a, .sidebar-menu li button {
       width: calc(100% - 16px); margin: 2px 8px; display: flex; align-items: center; gap: 10px;
@@ -215,13 +172,10 @@
     .sidebar-menu li a:hover, .sidebar-menu li button:hover {
       color: #fff; background: var(--sidebar-hover);
     }
-    [data-theme="daylight"] .sidebar-menu li a:hover,
-    [data-theme="daylight"] .sidebar-menu li button:hover {
-      color: var(--primary);
-    }
     .sidebar-menu li.active a, .sidebar-menu li.active button {
       color: #fff; background: var(--primary); font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0,90,79,.3);
+      border-left: 3px solid var(--gold-light);
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
     }
     .sidebar-menu .ico { width: 17px; text-align: center; font-size: 14px; flex-shrink: 0; }
     .sidebar-menu .lbl { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -230,24 +184,22 @@
       font-size: 10px; padding: 2px 7px; border-radius: 999px; font-weight: 700;
       white-space: nowrap; flex-shrink: 0;
     }
-    [data-theme="daylight"] .sidebar-badge { background: var(--primary-soft); color: var(--primary); }
-    .sidebar-badge.amber { background: rgba(245, 158, 11, .22); color: #FBBF24; }
-    [data-theme="daylight"] .sidebar-badge.amber { background: #FEF3C7; color: #B45309; }
+    .sidebar-badge.amber { background: rgba(245, 158, 11, .22); color: var(--gold-light); }
 
     body.sidebar-collapse .main-sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
     body.sidebar-collapse .content-wrapper { margin-left: 0; }
     .sidebar-backdrop {
-      display: none; position: fixed; inset: 58px 0 0 0; background: rgba(15,23,42,.45); z-index: 1015;
+      display: none; position: fixed; inset: 62px 0 0 0; background: rgba(15,23,42,.45); z-index: 1015;
     }
 
     /* ---------- MAIN CONTENT ---------- */
     .content-wrapper {
-      margin-top: 58px; margin-left: var(--sidebar-w); flex: 1;
+      margin-top: 62px; margin-left: var(--sidebar-w); flex: 1;
       padding: 16px 20px 30px; transition: margin-left .25s ease;
       max-width: 100%;
     }
 
-    /* ---------- 5 KPI CARDS DENGAN AKSEN LOGO ---------- */
+    /* ---------- 5 KPI CARDS ---------- */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -262,15 +214,15 @@
       position: relative; overflow: hidden;
     }
     .kpi-card::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3.5px; background: transparent;
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: transparent;
       transition: background .15s;
     }
-    .kpi-card:hover { border-color: #cbd5e1; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,23,42,.06); }
+    .kpi-card:hover { border-color: #b8c9c6; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,90,79,.07); }
     .kpi-card.active {
       border-color: var(--primary); background: var(--primary-soft);
       box-shadow: 0 0 0 1px var(--primary);
     }
-    .kpi-card.active::before { background: var(--accent-gold); }
+    .kpi-card.active::before { background: var(--gold); }
     .kpi-label { font-size: 11.5px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
     .kpi-val {
       font-size: 24px; font-weight: 800; color: var(--text); line-height: 1.1;
@@ -375,7 +327,7 @@
 
     /* Catatan Perubahan Jadwal */
     .cat-box {
-      background: #FFFBEB; border: 1px solid #F59E0B; border-left: 3px solid #D97706;
+      background: #FFFBEB; border: 1px solid #F59E0B; border-left: 3.5px solid var(--gold);
       border-radius: 6px; padding: 6px 9px;
       font-size: 11.5px; color: #92400E; font-weight: 500; cursor: pointer; line-height: 1.35;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
@@ -426,7 +378,7 @@
     .btn-danger:hover:not(:disabled) { background: #FEE2E2; }
     .btn-plain { background: var(--surface); color: var(--text); border-color: var(--border); }
     .btn-plain:hover:not(:disabled) { background: var(--bg); }
-    .btn-plain.active-chip { background: #FEF3C7; border-color: #F59E0B; color: #92400E; }
+    .btn-plain.active-chip { background: var(--gold-soft); border-color: var(--gold); color: #92400E; }
 
     /* ---------- PAGINATION BAR ---------- */
     .pagination-bar {
@@ -533,7 +485,7 @@
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
       <div class="login-logo-wrap">
-        <img id="loginLogo" src="https://i.ibb.co.com/zWNgLkPD/Logo-ASBP.jpg" alt="Logo ASBP">
+        <img id="loginLogo" src="https://i.ibb.co.com/zWNgLkPD/Logo-ASBP.jpg" alt="Logo-ASBP">
       </div>
       <h2>Dashboard Panitia SPMB</h2>
       <p>SMP Al Azhar Syifa Budi Parahyangan</p>
@@ -549,7 +501,7 @@
     <header class="main-header">
       <a href="#dashboard" class="brand-logo" onclick="resetAllFilters(); return false;">
         <div class="brand-emblem">
-          <img id="brandLogoImg" src="https://i.ibb.co.com/zWNgLkPD/Logo-ASBP.jpg" alt="Logo ASBP">
+          <img id="brandLogoImg" src="https://i.ibb.co.com/zWNgLkPD/Logo-ASBP.jpg" alt="Logo-ASBP">
         </div>
         <div class="brand-text-wrap">
           <span class="brand-title">SPMB ASBP</span>
@@ -562,11 +514,6 @@
           <span class="school-title-nav hide-mobile" id="heroSub"><b>SMP Al Azhar Syifa Budi Parahyangan</b></span>
         </div>
         <div class="navbar-right">
-          <select id="themeSelect" class="theme-select hide-mobile" onchange="changeTheme(this.value)" title="Pilih Tema Tampilan">
-            <option value="emerald">&#127912; Tema Emerald</option>
-            <option value="daylight">&#9728;&#65039; Tema Terang</option>
-            <option value="ivory">&#128220; Tema Ivory</option>
-          </select>
           <button type="button" class="nav-pill kiosk" onclick="openKiosk()" title="Mode Meja Registrasi Hari H">
             &#9989; <span>Meja Registrasi</span>
           </button>
@@ -1006,11 +953,6 @@
     function stSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { _mem[k] = v; } }
     function stDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} delete _mem[k]; }
 
-    function changeTheme(val) {
-      document.documentElement.setAttribute('data-theme', val || 'emerald');
-      try { localStorage.setItem('spmb_theme', val || 'emerald'); } catch (e) {}
-    }
-
     function toggleSidebar(force) {
       if (window.innerWidth <= 768) {
         if (typeof force === 'boolean') document.body.classList.toggle('sidebar-open', force);
@@ -1038,21 +980,15 @@
 
     function applyConfig(cfg) {
       CFG = Object.assign({}, FALLBACK_CFG, cfg || {});
-      if (!CFG.logo || CFG.logo.indexOf('http') !== 0) CFG.logo = OFFICIAL_LOGO;
-      $('loginLogo').src = CFG.logo;
-      $('brandLogoImg').src = CFG.logo;
+      CFG.logo = OFFICIAL_LOGO;
+      $('loginLogo').src = OFFICIAL_LOGO;
+      $('brandLogoImg').src = OFFICIAL_LOGO;
       $('heroSub').innerHTML = '<b>' + esc(CFG.sekolah) + '</b>';
       $('taLabel').textContent = 'T.A ' + CFG.ta;
     }
 
     function init() {
       injectSharedCss();
-      try {
-        var savedTheme = localStorage.getItem('spmb_theme') || 'emerald';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        $('themeSelect').value = savedTheme;
-      } catch (e) {}
-
       applyConfig(CFG);
       callBackend('getConfig', [], function (res) {
         if (res && res.success && res.config) applyConfig(res.config);
