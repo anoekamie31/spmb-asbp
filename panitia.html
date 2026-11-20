@@ -6,107 +6,304 @@
   <title>Dashboard Panitia SPMB ASBP</title>
   <style>
     :root {
-      --primary: #005a4f; --primary-dark: #003d35; --secondary: #00796b;
-      --accent: #1565c0; --bg: #f4f6f8; --text: #1e293b;
+      --primary: #005a4f;
+      --primary-dark: #00423a;
+      --secondary: #00796b;
+      --sidebar-bg: #222d32;
+      --sidebar-dark: #1a2226;
+      --sidebar-hover: #1e282c;
+      --sidebar-text: #b8c7ce;
+      --bg: #ecf0f5;
+      --text: #333333;
+      --sidebar-w: 235px;
     }
     * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
-    button { font-family: inherit; }
-    /* ---------- Login ---------- */
+    body {
+      font-family: 'Source Sans Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    button, input, select, textarea { font-family: inherit; }
+
+    /* ---------- LOGIN OVERLAY ---------- */
     .login-overlay {
-      position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); padding: 16px;
+      position: fixed; inset: 0; z-index: 3000; display: none; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--primary) 0%, #1a2226 100%); padding: 16px;
     }
-    .login-box { background: #fff; width: 100%; max-width: 380px; border-radius: 12px; padding: 26px 24px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-    .login-box img { display: block; max-width: 100%; max-height: 70px; margin: 0 auto 10px; }
-    .login-box h2 { margin: 0 0 4px; font-size: 18px; color: var(--primary); text-align: center; }
+    .login-box {
+      background: #fff; width: 100%; max-width: 390px; border-radius: 8px; padding: 28px 24px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.3); border-top: 4px solid var(--secondary);
+    }
+    .login-box img { display: block; max-width: 100%; max-height: 70px; margin: 0 auto 12px; }
+    .login-box h2 { margin: 0 0 4px; font-size: 19px; color: var(--primary); text-align: center; }
     .login-box p { margin: 0 0 16px; font-size: 12px; color: #64748b; text-align: center; }
-    .login-box input { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
+    .login-box input { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
     .login-box input:focus { outline: 2px solid var(--secondary); outline-offset: 1px; }
-    .login-box button { width: 100%; margin-top: 12px; padding: 11px; border: none; border-radius: 8px; background: var(--secondary); color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; }
+    .login-box button {
+      width: 100%; margin-top: 12px; padding: 11px; border: none; border-radius: 6px;
+      background: var(--primary); color: #fff; font-weight: 700; font-size: 14px; cursor: pointer;
+    }
+    .login-box button:hover:not(:disabled) { background: var(--primary-dark); }
     .login-box button:disabled { opacity: .65; cursor: wait; }
+    .login-portal-link {
+      display: block; text-align: center; margin-top: 14px; font-size: 12px;
+      color: var(--secondary); text-decoration: none; font-weight: 600;
+    }
+    .login-portal-link:hover { text-decoration: underline; }
     #loginErr { color: #b91c1c; font-size: 12px; margin-top: 10px; min-height: 16px; text-align: center; font-weight: 600; }
-    /* ---------- Header ---------- */
-    .hero-banner {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #fff;
-      padding: 14px 22px; box-shadow: 0 4px 12px rgba(0,0,0,.12);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+
+    /* ---------- ADMINLTE LAYOUT SHELL ---------- */
+    .wrapper { display: flex; min-height: 100vh; flex-direction: column; }
+
+    /* Top Header */
+    .main-header {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px; z-index: 1030;
+      display: flex; align-items: center; background: var(--primary); color: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.15);
     }
-    .hero-brand { display: flex; align-items: center; gap: 12px; }
-    .hero-brand img { height: 45px; background: #fff; padding: 3px; border-radius: 6px; }
-    .hero-title h1 { margin: 0; font-size: 18px; font-weight: 700; }
-    .hero-title p { margin: 2px 0 0; opacity: .85; font-size: 11px; }
-    .hero-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .btn-landing {
-      padding: 7px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; border: none; color: #fff;
-      display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    .brand-logo {
+      width: var(--sidebar-w); height: 50px; background: var(--primary-dark);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 0 12px; font-size: 16px; font-weight: 700; color: #fff;
+      text-decoration: none; flex-shrink: 0; transition: width .25s;
     }
-    .btn-landing:hover { opacity: .92; }
-    .landing-container { max-width: 1400px; margin: 0 auto; padding: 12px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin-bottom: 12px; }
-    .stat-card { background: #fff; padding: 10px 14px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.04); border-left: 4px solid var(--secondary); }
-    .stat-card h4 { margin: 0 0 4px; color: #64748b; font-size: 11px; font-weight: 700; }
-    .stat-card .value { font-size: 20px; font-weight: 700; line-height: 1; }
-    .warn-banner { display: none; background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 12px; }
-    .filter-card {
-      background: #fff; padding: 12px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.04);
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;
+    .brand-logo span b { font-weight: 800; }
+    .navbar-custom {
+      flex: 1; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px; height: 50px;
+    }
+    .sidebar-toggle {
+      background: none; border: none; color: #fff; font-size: 18px; cursor: pointer;
+      padding: 8px 10px; border-radius: 4px; line-height: 1;
+    }
+    .sidebar-toggle:hover { background: rgba(0,0,0,.15); }
+    .navbar-right { display: flex; align-items: center; gap: 8px; }
+    .nav-pill {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px;
+      border-radius: 4px; font-size: 12px; font-weight: 600; color: #fff;
+      text-decoration: none; border: none; cursor: pointer; background: rgba(255,255,255,.12);
+    }
+    .nav-pill:hover { background: rgba(255,255,255,.22); }
+    .nav-pill.logout { background: rgba(185, 28, 28, .85); }
+    .nav-pill.logout:hover { background: #b91c1c; }
+
+    /* Left Sidebar */
+    .main-sidebar {
+      position: fixed; top: 50px; bottom: 0; left: 0; width: var(--sidebar-w);
+      background: var(--sidebar-bg); color: var(--sidebar-text);
+      overflow-y: auto; z-index: 1020; transition: transform .25s ease, width .25s ease;
+    }
+    .user-panel {
+      display: flex; align-items: center; gap: 11px; padding: 14px 12px;
+      border-bottom: 1px solid #2c3b41;
+    }
+    .user-panel img {
+      width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
+      background: #fff; padding: 2px; flex-shrink: 0;
+    }
+    .user-info .u-name { color: #fff; font-weight: 700; font-size: 13px; line-height: 1.2; }
+    .user-info .u-status { font-size: 11px; color: #b8c7ce; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+    .dot-online { width: 8px; height: 8px; border-radius: 50%; background: #00a65a; display: inline-block; }
+
+    .sidebar-menu { list-style: none; margin: 0; padding: 0; }
+    .sidebar-header {
+      padding: 10px 15px; font-size: 10px; font-weight: 700; letter-spacing: .6px;
+      color: #4b646f; background: var(--sidebar-dark); text-transform: uppercase;
+    }
+    .sidebar-menu li a, .sidebar-menu li button {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 11px 15px; color: var(--sidebar-text); text-decoration: none;
+      background: none; border: none; border-left: 3px solid transparent;
+      font-size: 13px; text-align: left; cursor: pointer; transition: all .15s;
+    }
+    .sidebar-menu li a:hover, .sidebar-menu li button:hover,
+    .sidebar-menu li.active a, .sidebar-menu li.active button {
+      color: #fff; background: var(--sidebar-hover); border-left-color: #00a65a;
+    }
+    .sidebar-menu .ico { width: 18px; text-align: center; font-size: 14px; }
+    .sidebar-badge {
+      margin-left: auto; background: #00a65a; color: #fff; font-size: 10px;
+      padding: 1px 6px; border-radius: 10px; font-weight: 700;
+    }
+
+    /* Collapsed Sidebar (Desktop) & Drawer (Mobile) */
+    body.sidebar-collapse .main-sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+    body.sidebar-collapse .content-wrapper { margin-left: 0; }
+    .sidebar-backdrop {
+      display: none; position: fixed; inset: 50px 0 0 0; background: rgba(0,0,0,.45); z-index: 1015;
+    }
+
+    /* Main Content */
+    .content-wrapper {
+      margin-top: 50px; margin-left: var(--sidebar-w); flex: 1;
+      padding: 16px 18px 28px; transition: margin-left .25s ease;
+    }
+    .content-header {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+    }
+    .content-header h1 { margin: 0; font-size: 22px; font-weight: 600; color: #1e293b; }
+    .content-header h1 small { font-size: 13px; color: #64748b; font-weight: 400; margin-left: 6px; }
+    .breadcrumb { font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 6px; }
+    .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    /* ---------- ADMINLTE SMALL-BOX STAT CARDS ---------- */
+    .small-boxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .small-box {
+      position: relative; border-radius: 4px; color: #fff; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.12); display: flex; flex-direction: column;
+      justify-content: space-between;
+    }
+    .small-box .inner { padding: 14px 16px 12px; position: relative; z-index: 2; }
+    .small-box h3 { margin: 0 0 4px; font-size: 30px; font-weight: 800; line-height: 1.1; }
+    .small-box p { margin: 0; font-size: 13px; font-weight: 500; opacity: .95; }
+    .small-box .icon-bg {
+      position: absolute; top: 8px; right: 14px; font-size: 52px;
+      opacity: .18; z-index: 1; pointer-events: none; transition: transform .25s;
+    }
+    .small-box:hover .icon-bg { transform: scale(1.08); }
+    .small-box-footer {
+      position: relative; z-index: 2; display: block; text-align: center;
+      padding: 5px 0; color: rgba(255,255,255,.92); background: rgba(0,0,0,.14);
+      font-size: 12px; font-weight: 600; text-decoration: none; border: none;
+      width: 100%; cursor: pointer;
+    }
+    .small-box-footer:hover { background: rgba(0,0,0,.24); color: #fff; }
+
+    .bg-green  { background-color: #00a65a; }
+    .bg-yellow { background-color: #f39c12; }
+    .bg-red    { background-color: #dd4b39; }
+    .bg-aqua   { background-color: #00c0ef; }
+    .bg-blue   { background-color: #3c8dbc; }
+    .bg-purple { background-color: #605ca8; }
+
+    /* ---------- BOX PANEL (FILTER & TABLE) ---------- */
+    .box {
+      background: #fff; border-radius: 4px; border-top: 3px solid var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-bottom: 16px;
+    }
+    .box-header {
+      padding: 11px 15px; border-bottom: 1px solid #f1f5f9;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .box-title { margin: 0; font-size: 15px; font-weight: 700; color: #1e293b; }
+    .box-body { padding: 14px 15px; }
+
+    .warn-banner {
+      display: none; background: #fffbeb; border: 1px solid #fcd34d; color: #92400e;
+      padding: 10px 14px; border-radius: 4px; margin-bottom: 14px; font-size: 12px;
+    }
+
+    .filter-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px;
     }
     .filter-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569; }
     .filter-group input, .filter-group select {
-      width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; background: #fff;
+      width: 100%; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; background: #fff;
     }
     .filter-group input:focus, .filter-group select:focus { outline: 2px solid var(--secondary); outline-offset: 0; }
-    .table-container { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.04); overflow-x: auto; }
+
+    .table-container { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-    th { background: #f8fafc; color: #475569; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; font-weight: 700; white-space: nowrap; font-size: 11px; }
-    td { padding: 6px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    th {
+      background: #f8fafc; color: #334155; padding: 9px 10px; border-bottom: 2px solid #e2e8f0;
+      font-weight: 700; white-space: nowrap; font-size: 11px;
+    }
+    td { padding: 7px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
     tbody tr:hover { background: #f8fafc; }
-    td.loading, td.empty { text-align: center; padding: 22px; color: #64748b; font-style: italic; }
-    td.err { text-align: center; padding: 22px; color: #b91c1c; font-weight: 600; }
-    .more-bar { display: none; text-align: center; padding: 10px; font-size: 12px; color: #64748b; }
-    .more-bar button { margin-left: 8px; padding: 6px 12px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-    .badge { display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+    td.loading, td.empty { text-align: center; padding: 24px; color: #64748b; font-style: italic; }
+    td.err { text-align: center; padding: 24px; color: #b91c1c; font-weight: 600; }
+
+    .more-bar { display: none; text-align: center; padding: 12px; font-size: 12px; color: #64748b; background: #f8fafc; }
+    .more-bar button {
+      margin-left: 8px; padding: 6px 12px; border: 1px solid #cbd5e1; background: #fff;
+      border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;
+    }
+
+    .badge { display: inline-block; padding: 3px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; }
     .badge-success { background: #dcfce7; color: #166534; }
     .badge-pending { background: #ffedd5; color: #c2410c; }
+
     .action-group { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; }
     .btn-action {
-      padding: 5px 8px; border-radius: 5px; border: none; font-size: 11px; font-weight: 600; cursor: pointer;
+      padding: 5px 8px; border-radius: 4px; border: none; font-size: 11px; font-weight: 600; cursor: pointer;
       display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; color: #fff;
     }
     .btn-action:disabled { opacity: .4; cursor: not-allowed; }
     .btn-detail { background: #e2e8f0; color: #334155; }
-    .btn-cek { background: #0284c7; }
-    .btn-wa-yanda { background: #16a34a; }
+    .btn-cek { background: #00c0ef; }
+    .btn-wa-yanda { background: #00a65a; }
     .btn-wa-bunda { background: #0d9488; }
     .btn-presensi { background: #15803d; }
-    .btn-danger { background: #b91c1c; }
+    .btn-danger { background: #dd4b39; }
     .btn-plain { background: #fff; color: #334155; border: 1px solid #cbd5e1; }
-    .status-select { padding: 4px 6px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc; }
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.45); z-index: 1000; justify-content: center; align-items: center; padding: 8px; }
-    .modal-content { background: #fff; width: 94%; max-width: 650px; max-height: 88vh; border-radius: 10px; padding: 20px; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 12px; }
+    .status-select {
+      padding: 4px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;
+      cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc;
+    }
+
+    /* ---------- MODALS ---------- */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(15,23,42,.5);
+      z-index: 2000; justify-content: center; align-items: center; padding: 10px;
+    }
+    .modal-content {
+      background: #fff; width: 95%; max-width: 660px; max-height: 88vh;
+      border-radius: 6px; padding: 20px; overflow-y: auto; border-top: 3px solid var(--primary);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 12px;
+    }
     .modal-header h3 { margin: 0; color: var(--primary); font-size: 16px; }
     .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; line-height: 1; }
     .modal-foot { margin-top: 15px; display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
     .modal-foot .btn-action { padding: 8px 12px; font-size: 12px; }
+
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; }
-    .detail-item { background: #f8fafc; padding: 8px 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .detail-item { background: #f8fafc; padding: 8px 10px; border-radius: 4px; border: 1px solid #e2e8f0; }
     .detail-item label { display: block; font-size: 10px; color: #64748b; font-weight: 700; margin-bottom: 2px; }
     .detail-item span { color: #1e293b; font-weight: 600; word-break: break-word; }
-    @media (max-width: 520px) { .detail-grid { grid-template-columns: 1fr; } }
-    .tag-help { background: #eff6ff; padding: 10px; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid #2563eb; color: #1e40af; font-size: 12px; }
-    .chip { display: inline-block; margin: 2px 3px 2px 0; padding: 2px 7px; border-radius: 999px; border: 1px solid #93c5fd; background: #fff; color: #1d4ed8; font: 600 11px monospace; cursor: pointer; }
+
+    .tag-help {
+      background: #eff6ff; padding: 10px; border-radius: 4px; margin-bottom: 12px;
+      border-left: 3px solid #3c8dbc; color: #1e40af; font-size: 12px;
+    }
+    .chip {
+      display: inline-block; margin: 2px 3px 2px 0; padding: 2px 7px; border-radius: 999px;
+      border: 1px solid #93c5fd; background: #fff; color: #1d4ed8; font: 600 11px monospace; cursor: pointer;
+    }
     .wa-preview-box {
       background: #efeae2; border-radius: 6px; padding: 10px; margin-top: 6px; border: 1px solid #d1c7bd;
-      font-size: 11px; line-height: 1.4; color: #111b21; white-space: pre-wrap; word-wrap: break-word; max-height: 200px; overflow-y: auto;
+      font-size: 11px; line-height: 1.4; color: #111b21; white-space: pre-wrap; word-wrap: break-word;
+      max-height: 200px; overflow-y: auto;
     }
     .cat-cell { max-width: 230px; font-size: 11px; line-height: 1.35; }
     .cat-has { background: #fff7ed; }
-    .btn-catatan { background: #ea580c; margin-top: 3px; }
+    .btn-catatan { background: #f39c12; margin-top: 3px; }
     .q-bar { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin: 8px 0; }
-    .q-bar > div { height: 100%; width: 0; background: var(--secondary); transition: width .2s; }
-    .q-next { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 13px; min-height: 60px; }
+    .q-bar > div { height: 100%; width: 0; background: #00a65a; transition: width .2s; }
+    .q-next {
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px;
+      padding: 12px; margin-top: 10px; font-size: 13px; min-height: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .brand-logo { width: auto; padding: 0 10px; }
+      .main-sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+      .content-wrapper { margin-left: 0; }
+      body.sidebar-open .main-sidebar { transform: translateX(0); }
+      body.sidebar-open .sidebar-backdrop { display: block; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .hide-mobile { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -117,107 +314,260 @@
       <h2>Dashboard Panitia SPMB</h2>
       <p>Khusus panitia. Masukkan password untuk melanjutkan.</p>
       <input type="password" id="loginPw" placeholder="Password panitia" autocomplete="current-password">
-      <button type="button" id="btnLogin" onclick="doLogin()">Masuk</button>
+      <button type="button" id="btnLogin" onclick="doLogin()">Masuk ke Control Panel</button>
       <div id="loginErr" role="alert"></div>
+      <a href="index.html" class="login-portal-link">&#8592; Kembali ke Portal Orang Tua</a>
     </div>
   </div>
 
-  <div id="app" style="display:none;">
-    <div class="hero-banner">
-      <div class="hero-brand">
+  <!-- MAIN ADMIN SHELL -->
+  <div class="wrapper" id="app" style="display:none;">
+    <!-- Top Header -->
+    <header class="main-header">
+      <a href="#dashboard" class="brand-logo" onclick="resetAllFilters(); return false;">
+        <span><b>SPMB</b> ASBP</span>
+      </a>
+      <nav class="navbar-custom">
+        <button type="button" class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+        <div class="navbar-right">
+          <a href="index.html" target="_blank" rel="noopener noreferrer" class="nav-pill" title="Buka Portal Orang Tua di tab baru">
+            &#127760; <span class="hide-mobile">Portal Orang Tua</span>
+          </a>
+          <button type="button" class="nav-pill" onclick="loadDashboard()" title="Muat ulang data">
+            &#128260; <span class="hide-mobile">Refresh</span>
+          </button>
+          <button type="button" class="nav-pill logout" onclick="doLogout()">
+            &#128682; <span>Logout</span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <div class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
+    <!-- Left Sidebar -->
+    <aside class="main-sidebar">
+      <div class="user-panel">
         <img id="heroLogo" alt="Logo ASBP" onerror="this.style.display='none'">
-        <div class="hero-title">
-          <h1>Dashboard Panitia SPMB</h1>
-          <p id="heroSub"></p>
+        <div class="user-info">
+          <div class="u-name">Panitia SPMB</div>
+          <div class="u-status"><span class="dot-online"></span> Online &middot; <span id="taLabel">2027/2028</span></div>
         </div>
       </div>
-      <div class="hero-actions">
-        <button class="btn-landing" style="background:#16a34a" type="button" onclick="downloadXls(false)">&#128229; Unduh Hasil Filter</button>
-        <button class="btn-landing" style="background:#2563eb" type="button" onclick="downloadXls(true)">&#128230; Unduh Semua Data</button>
-        <button class="btn-landing" style="background:#7c3aed" type="button" onclick="downloadCsv()">&#128196; CSV (hasil filter)</button>
-        <button class="btn-landing" style="background:#059669" type="button" onclick="openQueue()">&#128232; Antrian Kirim WA</button>
-        <button class="btn-landing" style="background:#0d9488" type="button" onclick="openModalTemplate()">&#9881;&#65039; Template Pesan</button>
-        <button class="btn-landing" style="background:#0284c7" type="button" onclick="loadDashboard()">&#128260; Refresh</button>
-        <button class="btn-landing" style="background:#475569" type="button" onclick="doLogout()">&#128682; Keluar</button>
-      </div>
-    </div>
 
-    <div class="landing-container">
-      <div class="stats-grid">
-        <div class="stat-card" style="border-left-color:#00796b"><h4>Total Peserta</h4><div class="value" id="statTotal" style="color:#00796b">0</div></div>
-        <div class="stat-card" style="border-left-color:#15803d"><h4>Sudah Hadir</h4><div class="value" id="statHadir" style="color:#15803d">0</div></div>
-        <div class="stat-card" style="border-left-color:#0284c7"><h4>Sudah Cek Jadwal</h4><div class="value" id="statCek" style="color:#0284c7">0</div></div>
-        <div class="stat-card" style="border-left-color:#9333ea"><h4>Sudah Cetak Kartu</h4><div class="value" id="statKartu" style="color:#9333ea">0</div></div>
-        <div class="stat-card" style="border-left-color:#2563eb"><h4>Respon SIAP</h4><div class="value" id="statResponded" style="color:#2563eb">0</div></div>
-        <div class="stat-card" style="border-left-color:#ea580c"><h4>Hasil Filter</h4><div class="value" id="statFilter" style="color:#ea580c">0</div></div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-header">MAIN NAVIGATION</li>
+        <li class="active" id="navDashboard">
+          <button type="button" onclick="resetAllFilters(); closeMobileNav();">
+            <span class="ico">&#128202;</span> <span>Dashboard</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onclick="openQueue(); closeMobileNav();">
+            <span class="ico">&#128232;</span> <span>Antrian Kirim WA</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onclick="openModalTemplate(); closeMobileNav();">
+            <span class="ico">&#9881;&#65039;</span> <span>Template Pesan WA</span>
+          </button>
+        </li>
+
+        <li class="sidebar-header">EKSPOR &amp; LAPORAN</li>
+        <li>
+          <button type="button" onclick="downloadXls(false); closeMobileNav();">
+            <span class="ico">&#128229;</span> <span>Unduh Excel (Filter)</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onclick="downloadXls(true); closeMobileNav();">
+            <span class="ico">&#128230;</span> <span>Unduh Excel (Semua)</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onclick="downloadCsv(); closeMobileNav();">
+            <span class="ico">&#128196;</span> <span>Unduh CSV (Filter)</span>
+          </button>
+        </li>
+
+        <li class="sidebar-header">NAVIGASI WEB</li>
+        <li>
+          <a href="index.html" target="_blank" rel="noopener noreferrer">
+            <span class="ico">&#127760;</span> <span>Portal Orang Tua</span>
+            <span class="sidebar-badge">Web</span>
+          </a>
+        </li>
+        <li>
+          <button type="button" onclick="loadDashboard(); closeMobileNav();">
+            <span class="ico">&#128260;</span> <span>Refresh Data</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onclick="doLogout()">
+            <span class="ico">&#128682;</span> <span>Logout</span>
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-wrapper">
+      <div class="content-header">
+        <h1>Dashboard <small id="heroSub">Control panel</small></h1>
+        <div class="breadcrumb">
+          <span>&#127968; Home</span> &rsaquo; <a href="index.html" target="_blank" rel="noopener noreferrer">Portal Orang Tua</a> &rsaquo; <span>Dashboard</span>
+        </div>
+      </div>
+
+      <!-- Small-Box Stat Cards (Inspirasi AdminLTE) -->
+      <div class="small-boxes">
+        <div class="small-box bg-green">
+          <div class="inner">
+            <h3 id="statTotal">0</h3>
+            <p>Total Peserta</p>
+          </div>
+          <div class="icon-bg">&#128101;</div>
+          <button type="button" class="small-box-footer" onclick="quickFilter('all')">More info &#10132;</button>
+        </div>
+
+        <div class="small-box bg-yellow">
+          <div class="inner">
+            <h3 id="statHadir">0</h3>
+            <p>Sudah Hadir</p>
+          </div>
+          <div class="icon-bg">&#9989;</div>
+          <button type="button" class="small-box-footer" onclick="quickFilter('hadir')">More info &#10132;</button>
+        </div>
+
+        <div class="small-box bg-aqua">
+          <div class="inner">
+            <h3 id="statCek">0</h3>
+            <p>Sudah Cek Jadwal</p>
+          </div>
+          <div class="icon-bg">&#128269;</div>
+          <button type="button" class="small-box-footer" onclick="quickFilter('cek')">More info &#10132;</button>
+        </div>
+
+        <div class="small-box bg-purple">
+          <div class="inner">
+            <h3 id="statKartu">0</h3>
+            <p>Sudah Cetak Kartu</p>
+          </div>
+          <div class="icon-bg">&#128424;</div>
+          <button type="button" class="small-box-footer" onclick="quickFilter('kartu')">More info &#10132;</button>
+        </div>
+
+        <div class="small-box bg-blue">
+          <div class="inner">
+            <h3 id="statResponded">0</h3>
+            <p>Respon SIAP</p>
+          </div>
+          <div class="icon-bg">&#128172;</div>
+          <button type="button" class="small-box-footer" onclick="quickFilter('siap')">More info &#10132;</button>
+        </div>
+
+        <div class="small-box bg-red">
+          <div class="inner">
+            <h3 id="statFilter">0</h3>
+            <p>Hasil Filter Aktif</p>
+          </div>
+          <div class="icon-bg">&#128203;</div>
+          <button type="button" class="small-box-footer" onclick="resetAllFilters()">Reset Filter &#10132;</button>
+        </div>
       </div>
 
       <div class="warn-banner" id="dupBanner"></div>
 
-      <div class="filter-card">
-        <div class="filter-group">
-          <label for="searchKeyword">Pencarian Peserta</label>
-          <input type="text" id="searchKeyword" placeholder="Cari nama, no, sekolah, no. WA..." oninput="onSearch()">
+      <!-- Filter Panel -->
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">&#128269; Filter &amp; Pencarian Peserta</h3>
+          <button type="button" class="btn-action btn-plain" onclick="resetAllFilters()">&#8634; Reset Semua Filter</button>
         </div>
-        <div class="filter-group">
-          <label for="sortBy">Urutkan Berdasarkan</label>
-          <select id="sortBy" onchange="filterData()">
-            <option value="no_asc">No. Calon Murid (A - Z)</option>
-            <option value="no_desc">No. Calon Murid (Z - A)</option>
-            <option value="nama_asc">Nama Murid (A - Z)</option>
-            <option value="nama_desc">Nama Murid (Z - A)</option>
-            <option value="sekolah_asc">Asal Sekolah (A - Z)</option>
-            <option value="gel_sesi">Gelombang &amp; Sesi</option>
-            <option value="p_ortu">Pewawancara Ortu (A - Z)</option>
-            <option value="p_murid">Pewawancara Murid (A - Z)</option>
-          </select>
-        </div>
-        <div class="filter-group"><label for="filterGelombang">Gelombang</label><select id="filterGelombang" onchange="filterData()"><option value="">-- Semua --</option></select></div>
-        <div class="filter-group"><label for="filterSesi">Sesi</label><select id="filterSesi" onchange="filterData()"><option value="">-- Semua --</option></select></div>
-        <div class="filter-group"><label for="filterPewawancaraOrtu">Pewawancara Ortu</label><select id="filterPewawancaraOrtu" onchange="filterData()"><option value="">-- Semua --</option></select></div>
-        <div class="filter-group"><label for="filterPewawancaraMurid">Pewawancara Murid</label><select id="filterPewawancaraMurid" onchange="filterData()"><option value="">-- Semua --</option></select></div>
-        <div class="filter-group">
-          <label for="filterStatusWA">Status Respon WA</label>
-          <select id="filterStatusWA" onchange="filterData()">
-            <option value="">-- Semua --</option>
-            <option value="siap">Merespon SIAP</option>
-            <option value="terbaca">Terbaca</option>
-            <option value="terkirim">Terkirim</option>
-            <option value="belum_siap">Belum / Belum Respon</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filterHadir">Kehadiran</label>
-          <select id="filterHadir" onchange="filterData()">
-            <option value="">-- Semua --</option>
-            <option value="hadir">Sudah hadir</option>
-            <option value="belum">Belum hadir</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filterCatatan">Catatan Jadwal</label>
-          <select id="filterCatatan" onchange="filterData()">
-            <option value="">-- Semua --</option>
-            <option value="ada">Ada catatan (jadwal berubah)</option>
-            <option value="tidak">Tanpa catatan</option>
-          </select>
+        <div class="box-body">
+          <div class="filter-grid">
+            <div class="filter-group">
+              <label for="searchKeyword">Pencarian Peserta</label>
+              <input type="text" id="searchKeyword" placeholder="Cari nama, no, sekolah, no. WA..." oninput="onSearch()">
+            </div>
+            <div class="filter-group">
+              <label for="sortBy">Urutkan Berdasarkan</label>
+              <select id="sortBy" onchange="filterData()">
+                <option value="no_asc">No. Calon Murid (A - Z)</option>
+                <option value="no_desc">No. Calon Murid (Z - A)</option>
+                <option value="nama_asc">Nama Murid (A - Z)</option>
+                <option value="nama_desc">Nama Murid (Z - A)</option>
+                <option value="sekolah_asc">Asal Sekolah (A - Z)</option>
+                <option value="gel_sesi">Gelombang &amp; Sesi</option>
+                <option value="p_ortu">Pewawancara Ortu (A - Z)</option>
+                <option value="p_murid">Pewawancara Murid (A - Z)</option>
+              </select>
+            </div>
+            <div class="filter-group"><label for="filterGelombang">Gelombang</label><select id="filterGelombang" onchange="filterData()"><option value="">-- Semua --</option></select></div>
+            <div class="filter-group"><label for="filterSesi">Sesi</label><select id="filterSesi" onchange="filterData()"><option value="">-- Semua --</option></select></div>
+            <div class="filter-group"><label for="filterPewawancaraOrtu">Pewawancara Ortu</label><select id="filterPewawancaraOrtu" onchange="filterData()"><option value="">-- Semua --</option></select></div>
+            <div class="filter-group"><label for="filterPewawancaraMurid">Pewawancara Murid</label><select id="filterPewawancaraMurid" onchange="filterData()"><option value="">-- Semua --</option></select></div>
+            <div class="filter-group">
+              <label for="filterStatusWA">Status Respon WA</label>
+              <select id="filterStatusWA" onchange="filterData()">
+                <option value="">-- Semua --</option>
+                <option value="siap">Merespon SIAP</option>
+                <option value="terbaca">Terbaca</option>
+                <option value="terkirim">Terkirim</option>
+                <option value="belum_siap">Belum / Belum Respon</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filterHadir">Kehadiran</label>
+              <select id="filterHadir" onchange="filterData()">
+                <option value="">-- Semua --</option>
+                <option value="hadir">Sudah hadir</option>
+                <option value="belum">Belum hadir</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filterCatatan">Catatan Jadwal</label>
+              <select id="filterCatatan" onchange="filterData()">
+                <option value="">-- Semua --</option>
+                <option value="ada">Ada catatan (jadwal berubah)</option>
+                <option value="tidak">Tanpa catatan</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>NO. CALON MURID</th><th>NAMA CALON MURID</th><th>CATATAN JADWAL</th><th>ASAL SEKOLAH</th><th>GEL / SESI</th>
-              <th>PEWAWANCARA</th><th>CEK / KARTU</th><th>STATUS RESPON</th><th>STATUS HADIR</th>
-              <th style="min-width:300px">AKSI / KIRIM JADWAL WA</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-        <div class="more-bar" id="moreBar"></div>
+      <!-- Data Table Box -->
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">&#128203; Data Calon Murid &amp; Manajemen Jadwal</h3>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button type="button" class="btn-action btn-wa-yanda" onclick="openQueue()">&#128232; Antrian WA</button>
+            <button type="button" class="btn-action btn-cek" onclick="openModalTemplate()">&#9881;&#65039; Template WA</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>NO. CALON MURID</th>
+                <th>NAMA CALON MURID</th>
+                <th>CATATAN JADWAL</th>
+                <th>ASAL SEKOLAH</th>
+                <th>GEL / SESI</th>
+                <th>PEWAWANCARA</th>
+                <th>CEK / KARTU</th>
+                <th>STATUS RESPON</th>
+                <th>STATUS HADIR</th>
+                <th style="min-width:300px">AKSI / KIRIM JADWAL WA</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+          <div class="more-bar" id="moreBar"></div>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <!-- MODAL DETAIL -->
@@ -247,7 +597,7 @@
       <div class="modal-foot" style="border-top:1px solid #e2e8f0;padding-top:12px">
         <button id="btnModalWaYanda" class="btn-action btn-wa-yanda" type="button" onclick="sendWA(BYNO[CUR],'ayah')">&#128172; Kirim Yanda</button>
         <button id="btnModalWaBunda" class="btn-action btn-wa-bunda" type="button" onclick="sendWA(BYNO[CUR],'ibu')">&#128172; Kirim Bunda</button>
-        <button id="btnDownloadPDFServer" class="btn-action" style="background:#9333ea" type="button" onclick="unduhPDF()">&#128196; Unduh PDF</button>
+        <button id="btnDownloadPDFServer" class="btn-action" style="background:#605ca8" type="button" onclick="unduhPDF()">&#128196; Unduh PDF</button>
         <button class="btn-action btn-presensi" type="button" onclick="cetakKartu()">&#128424;&#65039; Cetak Instan</button>
         <button class="btn-action btn-plain" type="button" onclick="closeModal('modalJadwal')">Tutup</button>
       </div>
@@ -345,6 +695,7 @@
     var PAGE = 100;
     var LIMIT = PAGE;
     var CUR = '';
+    var EXTRA_FILTER = ''; // '', 'cek', 'kartu'
     var Q = { list: [], i: 0, who: 'ayah' };
     var TAGS = ['NAMA', 'NO_PESERTA', 'SEKOLAH', 'GELOMBANG', 'SESI', 'PEWAWANCARA_ORTU', 'PEWAWANCARA_MURID', 'JADWAL_LENGKAP', 'LINK', 'SAPAAN', 'CATATAN'];
     var SAMPLE = {
@@ -367,6 +718,18 @@
     function stSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { _mem[k] = v; } }
     function stDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} delete _mem[k]; }
 
+    function toggleSidebar(force) {
+      if (window.innerWidth <= 768) {
+        if (typeof force === 'boolean') document.body.classList.toggle('sidebar-open', force);
+        else document.body.classList.toggle('sidebar-open');
+      } else {
+        document.body.classList.toggle('sidebar-collapse');
+      }
+    }
+    function closeMobileNav() {
+      if (window.innerWidth <= 768) document.body.classList.remove('sidebar-open');
+    }
+
     function api(fn, args, ok, fail) {
       callBackend(fn, [TOKEN].concat(args || []), function (res) {
         if (res && res.unauth) { forceLogout(res.message); return; }
@@ -381,6 +744,7 @@
       $('loginLogo').src = CFG.logo;
       $('heroLogo').src = CFG.logo;
       $('heroSub').textContent = CFG.sekolah + ' \u00B7 T.A ' + CFG.ta;
+      $('taLabel').textContent = CFG.ta;
     }
 
     function init() {
@@ -437,7 +801,7 @@
       setTimeout(function () { $('loginPw').focus(); }, 50);
     }
 
-    function showApp() { $('loginOverlay').style.display = 'none'; $('app').style.display = 'block'; }
+    function showApp() { $('loginOverlay').style.display = 'none'; $('app').style.display = 'flex'; }
 
     function doLogin() {
       var pw = $('loginPw').value;
@@ -447,7 +811,7 @@
       $('loginErr').textContent = '';
 
       callBackend('loginPanitia', [pw], function (res) {
-        btn.disabled = false; btn.textContent = 'Masuk';
+        btn.disabled = false; btn.textContent = 'Masuk ke Control Panel';
         if (res && res.success) {
           TOKEN = res.token; stSet('spmb_pt', TOKEN);
           $('loginPw').value = '';
@@ -456,7 +820,7 @@
           $('loginErr').textContent = (res && res.message) || 'Login gagal.';
         }
       }, function () {
-        btn.disabled = false; btn.textContent = 'Masuk';
+        btn.disabled = false; btn.textContent = 'Masuk ke Control Panel';
         $('loginErr').textContent = 'Gagal terhubung ke server.';
       });
     }
@@ -485,6 +849,28 @@
     var _st;
     function onSearch() { clearTimeout(_st); _st = setTimeout(filterData, 200); }
     function closeModal(id) { $(id).style.display = 'none'; }
+
+    function resetAllFilters() {
+      $('searchKeyword').value = '';
+      $('filterGelombang').value = '';
+      $('filterSesi').value = '';
+      $('filterPewawancaraOrtu').value = '';
+      $('filterPewawancaraMurid').value = '';
+      $('filterStatusWA').value = '';
+      $('filterHadir').value = '';
+      $('filterCatatan').value = '';
+      EXTRA_FILTER = '';
+      filterData();
+    }
+
+    function quickFilter(mode) {
+      resetAllFilters();
+      if (mode === 'hadir') $('filterHadir').value = 'hadir';
+      else if (mode === 'siap') $('filterStatusWA').value = 'siap';
+      else if (mode === 'cek') EXTRA_FILTER = 'cek';
+      else if (mode === 'kartu') EXTRA_FILTER = 'kartu';
+      filterData();
+    }
 
     function jadwalText(r) {
       var nums = ['1\uFE0F\u20E3', '2\uFE0F\u20E3', '3\uFE0F\u20E3', '4\uFE0F\u20E3', '5\uFE0F\u20E3', '6\uFE0F\u20E3'];
@@ -596,6 +982,8 @@
       var sortVal = $('sortBy').value;
 
       VIEW = ROWS.filter(function (r) {
+        if (EXTRA_FILTER === 'cek' && !r.cek) return false;
+        if (EXTRA_FILTER === 'kartu' && !r.kartu) return false;
         if (kw) {
           var hay = (r.no + ' ' + r.nama + ' ' + r.sekolah + ' ' + (r.waAyah || '') + ' ' + (r.waIbu || '') + ' ' + (r.catatan || '')).toLowerCase();
           if (hay.indexOf(kw) < 0) return false;
