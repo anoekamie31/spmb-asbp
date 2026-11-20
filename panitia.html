@@ -462,6 +462,21 @@
     .rekap-link { color: var(--primary); font-weight: 700; text-decoration: none; cursor: pointer; }
     .rekap-link:hover { text-decoration: underline; }
 
+    /* ---------- PASSWORD MODAL FIELDS ---------- */
+    .pw-field-wrap { position: relative; margin-bottom: 12px; }
+    .pw-field-wrap label { display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+    .pw-field-wrap input {
+      width: 100%; padding: 9px 38px 9px 11px; border: 1px solid #cbd5e1;
+      border-radius: 7px; font-size: 13px;
+    }
+    .pw-field-wrap input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0,90,79,.15); }
+    .pw-eye-btn {
+      position: absolute; right: 8px; top: 27px; background: none; border: none;
+      cursor: pointer; color: #64748b; font-size: 14px; padding: 3px 5px;
+    }
+    .pw-hint { font-size: 11.5px; color: #64748b; margin-top: 2px; }
+    .pw-hint.ok { color: #059669; font-weight: 600; }
+
     @media (max-width: 1150px) {
       .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .filter-row-main { grid-template-columns: 1fr 1fr; }
@@ -570,7 +585,7 @@
           </button>
         </li>
 
-        <li class="sidebar-header">Ekspor &amp; Portal</li>
+        <li class="sidebar-header">Ekspor, Keamanan &amp; Portal</li>
         <li>
           <button type="button" onclick="downloadXls(false); closeMobileNav();">
             <span class="ico">&#128229;</span> <span class="lbl">Unduh Excel (Filter)</span>
@@ -579,6 +594,11 @@
         <li>
           <button type="button" onclick="downloadXls(true); closeMobileNav();">
             <span class="ico">&#128230;</span> <span class="lbl">Unduh Excel (Semua)</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" onclick="openModalPassword(); closeMobileNav();">
+            <span class="ico">&#128274;</span> <span class="lbl">Ganti Password</span>
           </button>
         </li>
         <li>
@@ -758,6 +778,39 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- MODAL GANTI PASSWORD PANITIA -->
+  <div class="modal-overlay" id="modalPassword">
+    <div class="modal-content" style="max-width:440px">
+      <div class="modal-header">
+        <h3>&#128274; Ganti Password Panitia</h3>
+        <button class="modal-close" type="button" onclick="closeModal('modalPassword')" aria-label="Tutup">&times;</button>
+      </div>
+      <div>
+        <div class="pw-field-wrap">
+          <label for="pwOld">Password Saat Ini</label>
+          <input type="password" id="pwOld" placeholder="Masukkan password lama..." autocomplete="current-password">
+          <button type="button" class="pw-eye-btn" onclick="togglePwVis('pwOld')" title="Lihat/Sembunyikan">&#128065;</button>
+        </div>
+        <div class="pw-field-wrap">
+          <label for="pwNew">Password Baru (Minimal 8 Karakter)</label>
+          <input type="password" id="pwNew" placeholder="Contoh: Asbp#2728" autocomplete="new-password" oninput="checkPwStrength()">
+          <button type="button" class="pw-eye-btn" onclick="togglePwVis('pwNew')" title="Lihat/Sembunyikan">&#128065;</button>
+          <div class="pw-hint" id="pwLenHint">Minimal 8 karakter (disarankan kombinasi huruf, angka &amp; simbol).</div>
+        </div>
+        <div class="pw-field-wrap">
+          <label for="pwConfirm">Ulangi Password Baru</label>
+          <input type="password" id="pwConfirm" placeholder="Ketik ulang password baru..." autocomplete="new-password">
+          <button type="button" class="pw-eye-btn" onclick="togglePwVis('pwConfirm')" title="Lihat/Sembunyikan">&#128065;</button>
+        </div>
+        <div id="pwModalErr" style="color:#dc2626;font-size:12px;font-weight:600;min-height:16px"></div>
+      </div>
+      <div class="modal-foot">
+        <button id="btnSavePw" class="btn-action btn-presensi" type="button" onclick="simpanPasswordBaru()">&#128190; Simpan Password</button>
+        <button class="btn-action btn-plain" type="button" onclick="closeModal('modalPassword')">Batal</button>
+      </div>
+    </div>
   </div>
 
   <!-- MODAL REKAP ASAL SEKOLAH -->
@@ -1074,6 +1127,68 @@
     function doLogout() {
       callBackend('logoutPanitia', [TOKEN], function () {}, function () {});
       forceLogout('Anda sudah keluar.');
+    }
+
+    /* ---------- GANTI PASSWORD ---------- */
+    function openModalPassword() {
+      $('pwOld').value = '';
+      $('pwNew').value = '';
+      $('pwConfirm').value = '';
+      $('pwOld').type = 'password';
+      $('pwNew').type = 'password';
+      $('pwConfirm').type = 'password';
+      $('pwModalErr').textContent = '';
+      $('pwLenHint').textContent = 'Minimal 8 karakter (disarankan kombinasi huruf, angka & simbol).';
+      $('pwLenHint').className = 'pw-hint';
+      $('modalPassword').style.display = 'flex';
+      setTimeout(function () { $('pwOld').focus(); }, 50);
+    }
+
+    function togglePwVis(id) {
+      var el = $(id);
+      el.type = (el.type === 'password') ? 'text' : 'password';
+    }
+
+    function checkPwStrength() {
+      var len = $('pwNew').value.trim().length;
+      var hint = $('pwLenHint');
+      if (len >= 8) {
+        hint.textContent = '\u2705 Panjang password terpenuhi (' + len + ' karakter).';
+        hint.className = 'pw-hint ok';
+      } else {
+        hint.textContent = 'Minimal 8 karakter (' + len + '/8 karakter).';
+        hint.className = 'pw-hint';
+      }
+    }
+
+    function simpanPasswordBaru() {
+      var oldPw = $('pwOld').value;
+      var newPw = $('pwNew').value.trim();
+      var confPw = $('pwConfirm').value.trim();
+      var errEl = $('pwModalErr');
+      errEl.textContent = '';
+
+      if (!oldPw) { errEl.textContent = 'Masukkan password saat ini.'; return; }
+      if (newPw.length < 8) { errEl.textContent = 'Password baru minimal 8 karakter.'; return; }
+      if (newPw !== confPw) { errEl.textContent = 'Konfirmasi password baru tidak cocok.'; return; }
+      if (oldPw === newPw) { errEl.textContent = 'Password baru tidak boleh sama dengan password lama.'; return; }
+
+      var btn = $('btnSavePw');
+      btn.disabled = true; btn.textContent = 'Menyimpan... \u23F3';
+      function reset() { btn.disabled = false; btn.innerHTML = '&#128190; Simpan Password'; }
+
+      api('changePanitiaPassword', [oldPw, newPw], function (res) {
+        reset();
+        if (res && res.success) {
+          toast('Password panitia berhasil diperbarui.', 'ok');
+          closeModal('modalPassword');
+        } else {
+          errEl.textContent = (res && res.message) || 'Gagal mengganti password.';
+        }
+      }, function (err) {
+        reset();
+        errEl.textContent = 'Terjadi kesalahan koneksi ke server.';
+      });
     }
 
     function cmp(a, b) { return String(a == null ? '' : a).localeCompare(String(b == null ? '' : b), 'id', { numeric: true, sensitivity: 'base' }); }
